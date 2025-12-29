@@ -48,30 +48,30 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="p-4">
-        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm sm:text-base">
           <ArrowLeft className="h-4 w-4" />
           Back to store
         </Link>
       </div>
 
       <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md animate-fade-in">
-          <div className="text-center mb-8">
+        <div className="w-full max-w-sm sm:max-w-md animate-fade-in">
+          <div className="text-center mb-6 sm:mb-8">
             <div className="flex justify-center mb-4">
-              <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
-                <ShoppingBag className="h-6 w-6 text-primary-foreground" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-xl flex items-center justify-center">
+                <ShoppingBag className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
               </div>
             </div>
-            <h1 className="font-display text-3xl font-bold text-foreground mb-2">
+            <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Admin Login
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm sm:text-base">
               Sign in to manage your products
             </p>
           </div>
 
-          <div className="bg-card rounded-xl p-8 shadow-card">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="bg-card rounded-xl p-6 sm:p-8 shadow-card">
+            <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -101,8 +101,8 @@ const Login = () => {
               </Button>
             </form>
 
-            <div className="mt-6 p-4 bg-secondary rounded-lg">
-              <p className="text-sm text-muted-foreground text-center">
+            <div className="mt-5 sm:mt-6 p-3 sm:p-4 bg-secondary rounded-lg">
+              <p className="text-xs sm:text-sm text-muted-foreground text-center">
                 <strong>Demo credentials:</strong><br />
                 Email: admin@gmail.com<br />
                 Password: admin123

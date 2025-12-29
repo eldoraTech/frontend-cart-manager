@@ -44,11 +44,11 @@ const FilterSidebar = ({ filters, onChange, onReset, maxPrice }: FilterSidebarPr
     filters.hasDiscount !== null;
 
   return (
-    <div className="bg-card rounded-xl p-6 shadow-soft space-y-6">
+    <div className="bg-card rounded-xl p-4 sm:p-6 shadow-soft space-y-5 sm:space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-xl font-semibold">Filters</h2>
+        <h2 className="font-display text-lg sm:text-xl font-semibold">Filters</h2>
         {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={onReset} className="text-muted-foreground">
+          <Button variant="ghost" size="sm" onClick={onReset} className="text-muted-foreground h-8 px-2 sm:px-3">
             <X className="h-4 w-4 mr-1" />
             Clear
           </Button>
@@ -56,11 +56,11 @@ const FilterSidebar = ({ filters, onChange, onReset, maxPrice }: FilterSidebarPr
       </div>
 
       {/* Categories */}
-      <div className="space-y-3">
-        <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+      <div className="space-y-2 sm:space-y-3">
+        <h3 className="font-medium text-xs sm:text-sm text-muted-foreground uppercase tracking-wider">
           Category
         </h3>
-        <div className="space-y-2">
+        <div className="space-y-1 sm:space-y-2">
           {CATEGORIES.map((category) => (
             <button
               key={category}
@@ -78,8 +78,8 @@ const FilterSidebar = ({ filters, onChange, onReset, maxPrice }: FilterSidebarPr
       </div>
 
       {/* Sizes */}
-      <div className="space-y-3">
-        <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+      <div className="space-y-2 sm:space-y-3">
+        <h3 className="font-medium text-xs sm:text-sm text-muted-foreground uppercase tracking-wider">
           Sizes
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -87,7 +87,7 @@ const FilterSidebar = ({ filters, onChange, onReset, maxPrice }: FilterSidebarPr
             <button
               key={size}
               onClick={() => handleSizeToggle(size)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                 filters.sizes.includes(size)
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-secondary hover:bg-secondary/80 text-secondary-foreground'
@@ -100,8 +100,8 @@ const FilterSidebar = ({ filters, onChange, onReset, maxPrice }: FilterSidebarPr
       </div>
 
       {/* Price Range */}
-      <div className="space-y-4">
-        <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+      <div className="space-y-3 sm:space-y-4">
+        <h3 className="font-medium text-xs sm:text-sm text-muted-foreground uppercase tracking-wider">
           Price Range
         </h3>
         <Slider
@@ -112,15 +112,15 @@ const FilterSidebar = ({ filters, onChange, onReset, maxPrice }: FilterSidebarPr
           step={1}
           className="w-full"
         />
-        <div className="flex justify-between text-sm text-muted-foreground">
+        <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
           <span>${filters.priceRange[0]}</span>
           <span>${filters.priceRange[1]}</span>
         </div>
       </div>
 
       {/* Discount */}
-      <div className="space-y-3">
-        <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+      <div className="space-y-2 sm:space-y-3">
+        <h3 className="font-medium text-xs sm:text-sm text-muted-foreground uppercase tracking-wider">
           Discount
         </h3>
         <div className="flex items-center space-x-2">

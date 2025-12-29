@@ -7,7 +7,8 @@ import SearchBar from '@/components/SearchBar';
 import FilterSidebar from '@/components/FilterSidebar';
 import SortDropdown from '@/components/SortDropdown';
 import { Button } from '@/components/ui/button';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { SlidersHorizontal } from 'lucide-react';
 
 const Index = () => {
   const [products] = useState<Product[]>(getProducts());
@@ -92,42 +93,75 @@ const Index = () => {
     return result;
   }, [products, filters, sortOption]);
 
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (filters.category) count++;
+    if (filters.sizes.length > 0) count++;
+    if (filters.priceRange[0] > 0 || filters.priceRange[1] < maxPrice) count++;
+    if (filters.hasDiscount !== null) count++;
+    return count;
+  }, [filters, maxPrice]);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6 sm:py-8">
         {/* Hero Section */}
-        <section className="text-center mb-12 animate-fade-in">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+        <section className="text-center mb-8 sm:mb-12 animate-fade-in">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4">
             Discover Your Style
           </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto px-4">
             Curated collection of premium fashion essentials for the modern wardrobe
           </p>
         </section>
 
         {/* Search and Sort Bar */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="flex-1">
+        <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <div className="w-full">
             <SearchBar value={filters.search} onChange={(v) => setFilters({ ...filters, search: v })} />
           </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              className="lg:hidden"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              {showFilters ? <X className="h-4 w-4" /> : <SlidersHorizontal className="h-4 w-4" />}
-              <span className="ml-2">Filters</span>
-            </Button>
-            <SortDropdown value={sortOption} onChange={setSortOption} />
+          <div className="flex gap-2 sm:gap-3">
+            {/* Mobile Filter Sheet */}
+            <Sheet open={showFilters} onOpenChange={setShowFilters}>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="lg:hidden flex-1 sm:flex-none relative">
+                  <SlidersHorizontal className="h-4 w-4 mr-2" />
+                  Filters
+                  {activeFilterCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-full sm:w-80 p-0 overflow-y-auto">
+                <SheetHeader className="p-4 border-b border-border">
+                  <SheetTitle>Filters</SheetTitle>
+                </SheetHeader>
+                <div className="p-4">
+                  <FilterSidebar
+                    filters={filters}
+                    onChange={setFilters}
+                    onReset={() => {
+                      resetFilters();
+                      setShowFilters(false);
+                    }}
+                    maxPrice={maxPrice}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
+            <div className="flex-1 sm:flex-none sm:ml-auto">
+              <SortDropdown value={sortOption} onChange={setSortOption} />
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Filters */}
-          <aside className={`lg:w-72 flex-shrink-0 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+          {/* Desktop Sidebar Filters */}
+          <aside className="hidden lg:block w-72 flex-shrink-0">
             <FilterSidebar
               filters={filters}
               onChange={setFilters}
@@ -138,14 +172,14 @@ const Index = () => {
 
           {/* Product Grid */}
           <div className="flex-1">
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-muted-foreground">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <p className="text-muted-foreground text-sm sm:text-base">
                 Showing <span className="font-medium text-foreground">{filteredProducts.length}</span> products
               </p>
             </div>
 
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                 {filteredProducts.map((product, index) => (
                   <div key={product.id} style={{ animationDelay: `${index * 50}ms` }}>
                     <ProductCard product={product} />
@@ -153,8 +187,8 @@ const Index = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16">
-                <p className="text-muted-foreground text-lg mb-4">No products found</p>
+              <div className="text-center py-12 sm:py-16">
+                <p className="text-muted-foreground text-base sm:text-lg mb-4">No products found</p>
                 <Button variant="outline" onClick={resetFilters}>
                   Clear Filters
                 </Button>
@@ -164,8 +198,8 @@ const Index = () => {
         </div>
       </main>
 
-      <footer className="border-t border-border mt-16 py-8">
-        <div className="container mx-auto px-4 text-center text-muted-foreground">
+      <footer className="border-t border-border mt-12 sm:mt-16 py-6 sm:py-8">
+        <div className="container mx-auto px-4 text-center text-muted-foreground text-sm sm:text-base">
           <p>© 2024 StyleStore. All rights reserved.</p>
         </div>
       </footer>

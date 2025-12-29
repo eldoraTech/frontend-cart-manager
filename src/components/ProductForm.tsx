@@ -94,7 +94,7 @@ const ProductForm = ({ product, isEditing = false }: ProductFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="name">Product Name *</Label>
         <Input
@@ -114,7 +114,7 @@ const ProductForm = ({ product, isEditing = false }: ProductFormProps) => {
           placeholder="https://example.com/image.jpg"
         />
         {formData.image && (
-          <div className="mt-2 w-32 h-40 rounded-lg overflow-hidden border border-border">
+          <div className="mt-2 w-24 h-32 sm:w-32 sm:h-40 rounded-lg overflow-hidden border border-border">
             <img
               src={formData.image}
               alt="Preview"
@@ -127,7 +127,7 @@ const ProductForm = ({ product, isEditing = false }: ProductFormProps) => {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="price">Price ($) *</Label>
           <Input
@@ -160,7 +160,7 @@ const ProductForm = ({ product, isEditing = false }: ProductFormProps) => {
           value={formData.category}
           onValueChange={(value) => setFormData({ ...formData, category: value })}
         >
-          <SelectTrigger>
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
           <SelectContent>
@@ -175,7 +175,7 @@ const ProductForm = ({ product, isEditing = false }: ProductFormProps) => {
 
       <div className="space-y-3">
         <Label>Available Sizes *</Label>
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
           {SIZES.map((size) => (
             <div key={size} className="flex items-center space-x-2">
               <Checkbox
@@ -183,7 +183,7 @@ const ProductForm = ({ product, isEditing = false }: ProductFormProps) => {
                 checked={formData.sizes.includes(size)}
                 onCheckedChange={() => handleSizeToggle(size)}
               />
-              <Label htmlFor={`size-${size}`} className="cursor-pointer">
+              <Label htmlFor={`size-${size}`} className="cursor-pointer text-sm">
                 {size}
               </Label>
             </div>
@@ -191,12 +191,12 @@ const ProductForm = ({ product, isEditing = false }: ProductFormProps) => {
         </div>
       </div>
 
-      <div className="flex gap-4">
-        <Button type="submit" variant="hero">
-          {isEditing ? 'Update Product' : 'Add Product'}
-        </Button>
-        <Button type="button" variant="outline" onClick={() => navigate('/admin/dashboard')}>
+      <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4">
+        <Button type="button" variant="outline" onClick={() => navigate('/admin/dashboard')} className="w-full sm:w-auto">
           Cancel
+        </Button>
+        <Button type="submit" variant="hero" className="w-full sm:w-auto">
+          {isEditing ? 'Update Product' : 'Add Product'}
         </Button>
       </div>
     </form>

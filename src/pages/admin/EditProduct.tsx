@@ -1,11 +1,37 @@
 import { useParams, Navigate } from 'react-router-dom';
-import { getProductById } from '@/lib/storage';
+import { useState, useEffect } from 'react';
+import { getProductById } from '@/lib/firebase';
+import { Product } from '@/types/product';
 import AdminSidebar from '@/components/AdminSidebar';
 import ProductForm from '@/components/ProductForm';
+import { Loader2 } from 'lucide-react';
 
 const EditProduct = () => {
   const { id } = useParams<{ id: string }>();
-  const product = id ? getProductById(id) : undefined;
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (id) {
+        const data = await getProductById(id);
+        setProduct(data);
+      }
+      setLoading(false);
+    };
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-background">
+        <AdminSidebar />
+        <main className="flex-1 pt-16 lg:pt-0 flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </main>
+      </div>
+    );
+  }
 
   if (!product) {
     return <Navigate to="/admin/dashboard" replace />;

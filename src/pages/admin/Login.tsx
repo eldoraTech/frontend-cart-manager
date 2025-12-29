@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { login, isAuthenticated } from '@/lib/storage';
+import { login, isAuthenticated } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { ShoppingBag, ArrowLeft } from 'lucide-react';
-import { useEffect } from 'react';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,7 +24,6 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     if (login(email, password)) {

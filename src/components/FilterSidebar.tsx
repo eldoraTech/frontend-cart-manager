@@ -1,5 +1,5 @@
 import { FilterState } from '@/types/product';
-import { CATEGORIES, SIZES } from '@/lib/storage';
+import { CATEGORIES, SIZES } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';

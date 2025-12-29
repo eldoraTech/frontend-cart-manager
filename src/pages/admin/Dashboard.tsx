@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getProducts, deleteProduct } from '@/lib/storage';
+import { getProducts, deleteProduct } from '@/lib/firebase';
 import { Product } from '@/types/product';
 import AdminSidebar from '@/components/AdminSidebar';
 import { Button } from '@/components/ui/button';
@@ -25,23 +25,42 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Pencil, Trash2, Plus, Package } from 'lucide-react';
+import { Pencil, Trash2, Plus, Package, Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const fetchProducts = async () => {
+    setLoading(true);
+    const data = await getProducts();
+    setProducts(data);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    setProducts(getProducts());
+    fetchProducts();
   }, []);
 
-  const handleDelete = (id: string) => {
-    deleteProduct(id);
-    setProducts(getProducts());
-    toast({
-      title: 'Product deleted',
-      description: 'The product has been removed successfully.',
-    });
+  const handleDelete = async (id: string) => {
+    setDeleting(id);
+    const success = await deleteProduct(id);
+    if (success) {
+      await fetchProducts();
+      toast({
+        title: 'Product deleted',
+        description: 'The product has been removed successfully.',
+      });
+    } else {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete product.',
+        variant: 'destructive',
+      });
+    }
+    setDeleting(null);
   };
 
   // Mobile Product Card Component
@@ -98,8 +117,9 @@ const Dashboard = () => {
               <AlertDialogAction
                 onClick={() => handleDelete(product.id)}
                 className="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={deleting === product.id}
               >
-                Delete
+                {deleting === product.id ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Delete'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -107,6 +127,17 @@ const Dashboard = () => {
       </div>
     </div>
   );
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-background">
+        <AdminSidebar />
+        <main className="flex-1 pt-16 lg:pt-0 flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -230,8 +261,9 @@ const Dashboard = () => {
                                     <AlertDialogAction
                                       onClick={() => handleDelete(product.id)}
                                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                      disabled={deleting === product.id}
                                     >
-                                      Delete
+                                      {deleting === product.id ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Delete'}
                                     </AlertDialogAction>
                                   </AlertDialogFooter>
                                 </AlertDialogContent>

@@ -1,16 +1,12 @@
-import { Navigate } from 'react-router-dom';
-import { isAuthenticated } from '@/lib/storage';
+import { Navigate, Outlet } from 'react-router-dom';
+import { isAuthenticated } from '@/lib/firebase';
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
-
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+const ProtectedRoute = () => {
   if (!isAuthenticated()) {
     return <Navigate to="/admin/login" replace />;
   }
 
-  return <>{children}</>;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

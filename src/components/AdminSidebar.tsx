@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Plus, LogOut, ShoppingBag, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Plus, LogOut, ShoppingBag, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { logout } from '@/lib/storage';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { logout } from '@/lib/firebase';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 const AdminSidebar = () => {
   const location = useLocation();
@@ -66,6 +66,9 @@ const AdminSidebar = () => {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-64 p-6">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Admin Navigation</SheetTitle>
+            </SheetHeader>
             <NavContent />
           </SheetContent>
         </Sheet>

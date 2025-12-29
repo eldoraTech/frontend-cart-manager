@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { getProducts } from '@/lib/storage';
+import { useState, useMemo, useEffect } from 'react';
+import { getProducts } from '@/lib/firebase';
 import { FilterState, SortOption, Product } from '@/types/product';
 import Header from '@/components/Header';
 import ProductCard from '@/components/ProductCard';
@@ -8,12 +8,23 @@ import FilterSidebar from '@/components/FilterSidebar';
 import SortDropdown from '@/components/SortDropdown';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal, Loader2 } from 'lucide-react';
 
 const Index = () => {
-  const [products] = useState<Product[]>(getProducts());
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [sortOption, setSortOption] = useState<SortOption>('price-asc');
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      const data = await getProducts();
+      setProducts(data);
+      setLoading(false);
+    };
+    fetchProducts();
+  }, []);
   
   const maxPrice = useMemo(() => {
     return Math.ceil(Math.max(...products.map((p) => p.price), 200));
@@ -23,9 +34,18 @@ const Index = () => {
     search: '',
     category: '',
     sizes: [],
-    priceRange: [0, maxPrice],
+    priceRange: [0, 500],
     hasDiscount: null,
   });
+
+  useEffect(() => {
+    if (products.length > 0) {
+      setFilters((prev) => ({
+        ...prev,
+        priceRange: [0, maxPrice],
+      }));
+    }
+  }, [maxPrice, products.length]);
 
   const resetFilters = () => {
     setFilters({
@@ -101,6 +121,14 @@ const Index = () => {
     if (filters.hasDiscount !== null) count++;
     return count;
   }, [filters, maxPrice]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
